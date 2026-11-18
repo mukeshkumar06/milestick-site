@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MileStick — Every place you've been, on one globe</title>
+  <meta name="description" content="MileStick is a travel app for riders, drivers and wanderers: record journeys with GPS, light up a 3D globe of everywhere you've been, earn verified badges, ride together and share view-once snaps with the friends who follow you back.">
+  <meta property="og:title" content="MileStick — Every place you've been, on one globe">
+  <meta property="og:description" content="Record journeys, light up your globe, ride together, and share the road with the people who matter.">
+  <meta property="og:image" content="assets/globe.png">
+  <meta name="theme-color" content="#F26A21">
+  <link rel="icon" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #F26A21; --orange-ink: #B5480F; --orange-soft: #FFF1E8; --orange-2: #FF8A3D;
+      --ink: #202124; --muted: #5F6368; --line: #ECECEC; --bg: #FFFFFF; --surface: #F7F8FA; --dark: #1C1D20;
+      --sky: #D6EEFB; --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+    body { margin: 0; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+    .wrap { width: min(1120px, 100% - 40px); margin-inline: auto; }
+
+    /* nav */
+    nav { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,.88); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
+    nav .wrap { display: flex; align-items: center; gap: 24px; height: 68px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 21px; letter-spacing: -.3px; }
+    .brand img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }
+    .brand span { color: var(--orange); }
+    nav ul { list-style: none; display: flex; gap: 26px; margin: 0 0 0 auto; padding: 0; }
+    nav ul a { text-decoration: none; font-weight: 600; font-size: 15px; color: var(--muted); }
+    nav ul a:hover { color: var(--ink); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 13px 22px; font-weight: 700; font-size: 15px; text-decoration: none; border: 1.5px solid transparent; transition: transform .15s ease, box-shadow .15s ease; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--orange); color: #fff; box-shadow: 0 8px 22px rgba(242,106,33,.32); }
+    .btn-ghost { border-color: var(--line); background: #fff; color: var(--ink); }
+    @media (max-width: 760px) { nav ul { display: none; } nav .btn { margin-left: auto; padding: 10px 16px; } }
+
+    /* hero */
+    .hero { background: radial-gradient(1200px 520px at 75% 40%, var(--sky), transparent 70%), linear-gradient(#fff, #fff); overflow: hidden; }
+    .hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 40px; padding: 72px 0 84px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; background: var(--orange-soft); color: var(--orange-ink); font-weight: 700; font-size: 13px; letter-spacing: .4px; text-transform: uppercase; padding: 7px 14px; border-radius: 999px; }
+    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+    h1 { font-size: clamp(38px, 5.4vw, 64px); line-height: 1.04; letter-spacing: -1.6px; margin: 20px 0 18px; font-weight: 800; }
+    h1 em { font-style: normal; color: var(--orange); }
+    .lead { font-size: 19px; color: var(--muted); max-width: 540px; margin: 0 0 30px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-art { position: relative; aspect-ratio: 1; max-width: 440px; justify-self: center; width: 86%; margin: 24px 0; }
+    .hero-art .globe { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 10px rgba(143,205,240,.18), 0 30px 70px rgba(58,134,175,.25); }
+    .hero-art .globe img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%; transform: scale(1.3); animation: drift 26s ease-in-out infinite alternate; }
+    @keyframes drift { from { transform: scale(1.3) translateX(-2%); } to { transform: scale(1.3) translateX(2%); } }
+    .chip { position: absolute; display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 16px; padding: 10px 14px; box-shadow: 0 12px 30px rgba(32,33,36,.14); font-weight: 700; font-size: 14px; white-space: nowrap; }
+    .chip small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
+    .chip .dot { width: 34px; height: 34px; border-radius: 50%; background: var(--orange); color: #fff; display: grid; place-items: center; font-weight: 800; }
+    .chip.a { top: 6%; left: -8%; } .chip.b { top: 46%; right: -4%; } .chip.c { bottom: 0; left: 2%; }
+    @media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; padding: 48px 0 64px; } .hero-art { max-width: 380px; } .chip.a { left: 0; } .chip.b { right: 0; } }
+
+    /* stats strip */
+    .strip { background: var(--dark); color: #fff; }
+    .strip .wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 34px 0; }
+    .strip b { display: block; font-size: 30px; font-weight: 800; letter-spacing: -.5px; color: var(--orange-2); }
+    .strip span { color: #C4C7CC; font-size: 14px; }
+    @media (max-width: 700px) { .strip .wrap { grid-template-columns: repeat(2, 1fr); } }
+
+    section { padding: 92px 0; scroll-margin-top: 68px; }
+    .section-head { max-width: 680px; margin-bottom: 46px; }
+    .section-head h2 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.1; letter-spacing: -1px; margin: 12px 0 14px; font-weight: 800; }
+    .section-head p { color: var(--muted); font-size: 18px; margin: 0; }
+    .kicker { color: var(--orange-ink); font-weight: 800; font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase; }
+
+    /* features */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; box-shadow: 0 2px 10px rgba(32,33,36,.04); transition: transform .2s ease, box-shadow .2s ease; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(32,33,36,.08); }
+    .icon { width: 50px; height: 50px; border-radius: 15px; background: var(--orange-soft); display: grid; place-items: center; margin-bottom: 18px; }
+    .icon svg { width: 26px; height: 26px; stroke: var(--orange-ink); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .card h3 { margin: 0 0 8px; font-size: 20px; letter-spacing: -.2px; }
+    .card p { margin: 0; color: var(--muted); font-size: 15.5px; }
+    .card ul { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 15px; }
+    .card.wide { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; background: linear-gradient(135deg, #fff 55%, var(--orange-soft)); }
+    @media (max-width: 960px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } .card.wide { grid-column: auto; grid-template-columns: 1fr; } }
+
+    /* snaps */
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .phone { width: min(320px, 100%); margin-inline: auto; background: #fff; border-radius: 40px; padding: 16px; border: 10px solid var(--dark); box-shadow: 0 30px 60px rgba(32,33,36,.18); }
+    .row { display: flex; align-items: center; gap: 12px; padding: 12px 6px; border-bottom: 1px solid var(--line); }
+    .row:last-child { border-bottom: 0; }
+    .av { width: 46px; height: 46px; border-radius: 50%; background: #E8EAED; display: grid; place-items: center; font-weight: 800; color: #3C4043; flex: none; }
+    .av.ring { box-shadow: 0 0 0 2px #fff, 0 0 0 4.5px var(--orange); }
+    .row b { display: block; font-size: 15px; }
+    .row small { color: var(--muted); font-size: 13px; }
+    .row small.new { color: var(--orange-ink); font-weight: 700; }
+    .row small.new::before { content: "● "; color: var(--orange); }
+    .phone-head { display: flex; justify-content: space-between; align-items: center; padding: 6px 6px 12px; font-weight: 800; font-size: 19px; }
+    .tabs { display: flex; gap: 8px; padding: 0 6px 6px; }
+    .tabs span { border: 1.5px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 700; }
+    .tabs span.on { background: var(--orange); border-color: var(--orange); }
+    .fab { margin: 10px 6px 0 auto; width: 52px; height: 52px; border-radius: 18px; background: var(--orange); display: grid; place-items: center; box-shadow: 0 8px 20px rgba(242,106,33,.35); }
+    .fab svg { width: 26px; height: 26px; stroke: #fff; fill: none; stroke-width: 2; }
+    .ticks { list-style: none; padding: 0; margin: 22px 0 0; display: grid; gap: 14px; }
+    .ticks li { display: flex; gap: 12px; color: var(--muted); }
+    .ticks li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 50%; background: var(--orange-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B5480F' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/13px no-repeat; }
+    .ticks b { color: var(--ink); }
+    @media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
+
+    /* why */
+    .why { background: var(--surface); }
+    .quote { font-size: clamp(22px, 2.6vw, 30px); line-height: 1.35; font-weight: 700; letter-spacing: -.4px; max-width: 860px; margin: 0; }
+    .quote em { font-style: normal; color: var(--orange); }
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; }
+    .pillars div { background: #fff; border-radius: var(--radius); padding: 24px; border: 1px solid var(--line); }
+    .pillars h3 { margin: 0 0 6px; font-size: 18px; }
+    .pillars p { margin: 0; color: var(--muted); font-size: 15px; }
+    @media (max-width: 760px) { .pillars { grid-template-columns: 1fr; } }
+
+    /* how */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; counter-reset: s; }
+    .steps div { position: relative; padding: 26px 22px 22px; border-radius: var(--radius); border: 1px solid var(--line); }
+    .steps div::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--dark); color: #fff; font-weight: 800; margin-bottom: 14px; }
+    .steps h3 { margin: 0 0 6px; font-size: 17px; }
+    .steps p { margin: 0; color: var(--muted); font-size: 14.5px; }
+    @media (max-width: 860px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+
+    /* privacy */
+    .privacy { background: var(--dark); color: #fff; border-radius: 30px; padding: 56px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
+    .privacy h2 { font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1; margin: 10px 0 0; letter-spacing: -.8px; }
+    .privacy .kicker { color: var(--orange-2); }
+    .privacy ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+    .privacy li { color: #C4C7CC; padding-left: 28px; position: relative; }
+    .privacy li::before { content: ""; position: absolute; left: 0; top: 7px; width: 12px; height: 12px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 4px rgba(242,106,33,.22); }
+    .privacy li b { color: #fff; }
+    @media (max-width: 860px) { .privacy { grid-template-columns: 1fr; padding: 36px 24px; } }
+
+    /* cta */
+    .final { text-align: center; }
+    .final h2 { font-size: clamp(32px, 4.4vw, 52px); letter-spacing: -1.2px; line-height: 1.08; margin: 0 0 14px; }
+    .final p { color: var(--muted); font-size: 18px; margin: 0 auto 28px; max-width: 560px; }
+    .final .cta { justify-content: center; }
+    footer { border-top: 1px solid var(--line); padding: 30px 0 40px; color: var(--muted); font-size: 14px; }
+    footer .wrap { display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; }
+    /* Visible by default; the fade-in only applies once the script has started and can reveal them. */
+    .anim .reveal:not(.in) { opacity: 0; transform: translateY(14px); }
+    .anim .reveal { transition: opacity .6s ease, transform .6s ease; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="MileStick home"><img src="assets/logo.png" alt=""><b>Mile<span>Stick</span></b></a>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#snaps">Snaps</a></li>
+        <li><a href="#why">Why MileStick</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+      </ul>
+      <a class="btn btn-primary" href="#get">Get early access</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">For riders, drivers & wanderers</span>
+        <h1>Every place you've been, <em>on one globe.</em></h1>
+        <p class="lead">MileStick turns your journeys into a living 3D globe. Record rides with GPS, add trips you've already made, earn badges for real kilometres, ride together safely, and share the road with the friends who follow you back.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#get">Join the early access</a>
+          <a class="btn btn-ghost" href="#features">See what it does</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="globe"><img src="assets/globe.png" alt=""></div>
+        <div class="chip a"><span class="dot">!</span><div>Munnar<small>3 journeys</small></div></div>
+        <div class="chip b"><span class="dot">✓</span><div>1,248 km<small>GPS-verified</small></div></div>
+        <div class="chip c"><span class="dot">5</span><div>States explored<small>State Explorer badge</small></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="strip">
+    <div class="wrap">
+      <div><b>3D globe</b><span>drawn on your phone's GPU</span></div>
+      <div><b>Verified km</b><span>only from recorded GPS</span></div>
+      <div><b>View-once</b><span>snaps for mutual followers</span></div>
+      <div><b>Group SOS</b><span>for rides together</span></div>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">Features</span>
+        <h2>One app for every journey you take.</h2>
+        <p>Whether it's a sunrise ride to the hills or a family road trip across states, MileStick keeps the story, the places and the people together.</p>
+      </div>
+      <div class="grid">
+        <article class="card wide reveal">
+          <div>
+            <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+            <h3>Your journey globe</h3>
+            <p>A smooth, spinnable 3D globe that shows where you've been: visited countries glow orange, every place gets a pin, and your photos appear right where you took them. Places close together merge into one marker and split apart as you zoom in.</p>
+          </div>
+          <ul>
+            <li>Drag to spin, pinch to zoom, tap a pin for its journeys</li>
+            <li>GPS routes drawn as lines; trips added by hand drawn as arcs</li>
+            <li>Visit a friend's profile and explore their globe too</li>
+            <li>No map provider or tracking required to view it</li>
+          </ul>
+        </article>
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div>
+          <h3>GPS-verified badges</h3>
+          <p>Record a ride and MileStick checks the route itself. Kilometres, altitude and long-distance badges only count what was truly recorded, so every badge means something.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3z"/><path d="M9 4v13M15 7v13"/></svg></div>
+          <h3>Journeys without GPS</h3>
+          <p>Already travelled? Add a trip from its start and finish, date, travel mode, photos and story. It lights up your places, states and countries without draining your battery.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9" r="2.6"/><path d="M3 20c.8-3.4 3.2-5 6-5s5.2 1.6 6 5M14.5 15.6c2.6-.4 5.6.8 6.5 4.4"/></svg></div>
+          <h3>Group rides</h3>
+          <p>Plan a ride with a meeting point and destination, invite friends from chat, share live location only while riding, and see how far each rider is from you and the destination.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M12 8v5M12 16h.01"/></svg></div>
+          <h3>SOS for the road</h3>
+          <p>One tap alerts your group with your location, works with your phone's own calling and messaging, and keeps everyone updated until you mark yourself safe.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg></div>
+          <h3>Chats with mutual followers</h3>
+          <p>Conversations open only between travellers who follow each other, so your inbox stays personal. Share rides, profiles, badges and your location in a tap.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8"/><path d="M14 8h6v6"/></svg></div>
+          <h3>Travel footprint</h3>
+          <p>Countries, states, places, journeys and verified kilometres at a glance, with your next milestone always in view to pull you toward the next trip.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="snaps" style="padding-top: 20px;">
+    <div class="wrap split">
+      <div class="reveal">
+        <span class="kicker">Snaps</span>
+        <h2 style="font-size: clamp(30px,3.6vw,44px); line-height:1.1; letter-spacing:-1px; margin:12px 0 14px;">Share the moment. Once.</h2>
+        <p style="color: var(--muted); font-size: 18px; margin: 0;">Tap the orange camera on Home and send what you're seeing right now to the friends who follow you back.</p>
+        <ul class="ticks">
+          <li><span><b>Camera only.</b> Snaps are photos taken in the moment, never old gallery shots.</span></li>
+          <li><span><b>Opens once.</b> Your friend sees it full screen one time, within 24 hours. Then it's gone.</span></li>
+          <li><span><b>Pinned to your globe.</b> With location on, the photo can also land on your globe at that place. Take another there and you choose whether to replace it.</span></li>
+          <li><span><b>Send to many.</b> Pick friends one by one or select all your mutual followers.</span></li>
+        </ul>
+      </div>
+      <div class="phone reveal" aria-hidden="true">
+        <div class="phone-head">Chats <span style="color: var(--orange-ink); font-size: 14px;">See all</span></div>
+        <div class="tabs"><span class="on">Mutual</span><span>Unread</span><span>Groups</span></div>
+        <div class="row"><div class="av ring">AR</div><div><b>Arjun</b><small class="new">New snap</small></div></div>
+        <div class="row"><div class="av">PN</div><div><b>Priya</b><small>✓✓ See you at the meetup!</small></div></div>
+        <div class="row"><div class="av" style="background: var(--orange-soft); color: var(--orange-ink);">WB</div><div><b>Weekend riders</b><small>Karthik: Next ride to Wayanad?</small></div></div>
+        <div class="row"><div class="av">VK</div><div><b>Vishal</b><small>Tap to chat</small></div></div>
+        <div class="fab"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="why" id="why">
+    <div class="wrap">
+      <span class="kicker">Why MileStick</span>
+      <p class="quote reveal" style="margin-top: 14px;">Photos end up scattered across apps, trips blur together, and the miles you earned are forgotten. MileStick gives every journey a <em>place on your globe</em> and every rider a way to <em>show where they've really been</em>.</p>
+      <div class="pillars">
+        <div class="reveal"><h3>Honest achievements</h3><p>Badges and kilometres come from recorded GPS only. Trips added by hand count toward places, never toward verified distance.</p></div>
+        <div class="reveal"><h3>Built for the road</h3><p>Group planning, live location only while you choose to share, and an SOS that works with your phone's own calling.</p></div>
+        <div class="reveal"><h3>Social, not noisy</h3><p>Chats and snaps only between people who follow each other. No strangers in your inbox, no endless feed.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="kicker">How it works</span>
+        <h2>From the first ride to a glowing globe.</h2>
+      </div>
+      <div class="steps">
+        <div class="reveal"><h3>Create your profile</h3><p>Add a photo, a cover and where you're from.</p></div>
+        <div class="reveal"><h3>Record or add a journey</h3><p>Track a ride with GPS, or add a trip you've already made.</p></div>
+        <div class="reveal"><h3>Watch your globe grow</h3><p>Countries light up, places get pins, badges unlock.</p></div>
+        <div class="reveal"><h3>Ride and share together</h3><p>Follow friends, plan group rides, send snaps.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy" style="padding-top: 0;">
+    <div class="wrap">
+      <div class="privacy reveal">
+        <div><span class="kicker">Privacy by design</span><h2>Your journeys, shared on your terms.</h2></div>
+        <ul>
+          <li><b>Private profiles.</b> Make your profile private and only you see your journeys, places and pins.</li>
+          <li><b>Hidden start and end.</b> Public routes hide the first and last 300 metres, so nobody learns where you live.</li>
+          <li><b>Approximate places.</b> Live status and photo pins are placed to the area, not your exact spot.</li>
+          <li><b>Private storage.</b> Photos are kept in private storage and shown through short-lived links. Snap photos are deleted automatically after a day.</li>
+          <li><b>You stay in control.</b> Block or report anyone, stop sharing your location at any time, and remove a pinned photo whenever you like.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="final" id="get">
+    <div class="wrap reveal">
+      <h2>Your next journey deserves a pin.</h2>
+      <p>MileStick is in early access on Android. Want to try it before launch? Reach out and we'll add you to the test group.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://github.com/mukeshkumar06" target="_blank" rel="noopener">Contact the team</a>
+        <a class="btn btn-ghost" href="#features">Explore the features</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <a class="brand" href="#top" style="font-size: 17px;"><img src="assets/logo.png" alt="" style="width:28px;height:28px;"><b>Mile<span>Stick</span></b></a>
+      <span>© 2026 MileStick. Made for people who love the road.</span>
+    </div>
+  </footer>
+
+  <script>
+    // Fade sections in as they scroll into view (skipped when reduced motion is on, or if the browser lacks support).
+    const items = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('anim');
+      const io = new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+      items.forEach((el) => io.observe(el));
+      setTimeout(() => items.forEach((el) => el.classList.add('in')), 2500); // never leave anything hidden
+    }
+  </script>
+</body>
+</html>
